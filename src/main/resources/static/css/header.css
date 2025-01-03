@@ -50,7 +50,7 @@ body {
 }
 
 
-.container {
+.container, .container-fluid{
     background-color: transparent !important;
 }
 
@@ -157,6 +157,7 @@ footer {
     padding-left: 1.25rem; /* 20px */
     display: flex;
     text-align: center;
+    background: url("../images/superman_image.jpg");
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -165,11 +166,13 @@ footer {
 }
 
 .login .form-details {
+    background: url("../images/superman_image.jpg");
     background-size: cover;
     background-position: center;
 }
 
 .signup .form-details {
+    background: url("../images/gladiator_image.jpg");
     background-size: cover;
     background-position: center;
 }
@@ -178,10 +181,6 @@ footer {
 .form-box h2 {
     text-align: center;
     margin-top: 1.25rem; /* 20px */
-}
-
-#header-login-button {
-    margin-right: 1.25rem; /* 20px */
 }
 
 .logo-img {
@@ -209,7 +208,7 @@ footer {
 form .input-field {
     height: 3.125rem; /* 50px */
     width: 100%;
-    margin-top: 1.25rem; /* 20px */
+    margin-top: 1rem; /* 16px */
     position: relative;
 }
 
@@ -342,7 +341,7 @@ form button:hover {
 
 /* Courses List */
 
-.container {
+.container, .container-fluid{
     background-color: #fff;
     border-radius: 0.5rem; /* 8px */
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3); /* 2px 4px */

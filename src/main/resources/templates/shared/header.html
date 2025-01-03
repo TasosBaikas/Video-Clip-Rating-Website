@@ -43,13 +43,97 @@
             </form>
 
             <!-- Σύνδεση link -->
-            <a href="/login" id="header-login-button" class="navbar-nav nav-link me-3">Σύνδεση</a>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+              <li class="nav-item">
+                <button class="login-btn me-3" id="login-profile-button" style="visibility:hidden">...</button>
+              </li>
+            </ul>
+<!--            <a href="/login" id="header-login-button" class="navbar-nav nav-link me-3">Σύνδεση</a>-->
           </div>
         </div>
       </div>
     </nav>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" defer></script>
-    <script src="/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js" defer></script>
+
+    <!-- Popup Form -->
+    <div class="blur-bg-overlay"></div>
+
+    <div class="form-popup">
+
+      <form th:action="@{/login}" method="post" id="loginForm">
+        <span class="close-btn material-symbols-rounded">close</span>
+        <div class="form-box login">
+          <div class="form-details">
+            <h2 class="text-white">Welcome Back!</h2>
+          </div>
+          <div class="form-content">
+            <h2>Log In</h2>
+
+            <p id="failed-login-message"></p>
+            <div class="input-field">
+              <input type="text" th:name="username" class="form-control" required="required" id="login-username" />
+              <label>Username</label>
+            </div>
+            <div class="input-field">
+              <input type="password" th:name="password" class="form-control" required="required" id="login-password" />
+              <label>Password</label>
+            </div>
+            <button type="submit" class="w-100 mt-1">Log In</button>
+            <div class="spinner-border text-darkmagenta mt-3" id="loading-spinner-login" style="visibility: hidden;"></div>
+
+            <div class="bottom-link">
+              Don't have an account?
+              <a href="#" id="signup-link">Sign Up</a>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <form th:action="@{/register}" method="post" id="signUpForm">
+        <div class="form-horizontal login-form">
+          <div class="form-box signup">
+            <div class="form-details">
+              <h2 class="text-white">Create Account</h2>
+            </div>
+            <div class="form-content">
+              <h2>Sign up</h2>
+
+              <p id="failed-sign-up-message"></p>
+
+              <div class="input-field">
+                <input type="text" th:name="username" class="form-control" required="required" id="register-username" />
+                <label>Enter your username</label>
+              </div>
+
+              <div class="input-field">
+                <input type="password" th:name="password" class="form-control" required="required" id="register-password" />
+                <label>Create password</label>
+              </div>
+
+              <div class="policy-text">
+                <input type="checkbox" id="policy" />
+                <label for="policy">
+                  I agree to <a href="#">Terms & Conditions</a>
+                </label>
+              </div>
+              <button type="submit" style="width: 100%;">Sign Up</button>
+              <div class="spinner-border text-darkmagenta mt-3" id="loading-spinner-sign-up" style="visibility: hidden;"></div>
+
+              <div class="bottom-link">
+                Already have an account?
+                <a href="#" id="login-link">Login</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script src="/webjars/jquery/3.6.4/jquery.min.js"></script>
+    <script src="/webjars/popper.js/2.11.7/umd/popper.min.js"></script>
+    <script src="/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script src="/js/header.js"></script>
+
   </header>
 
 </body>
