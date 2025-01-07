@@ -1,139 +1,212 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+
+  <meta name="_csrf" th:content="${_csrf.token}">
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
   <link rel="stylesheet" href="/css/header.css">
   <link rel="stylesheet" href="/webjars/bootstrap/5.3.0/css/bootstrap.min.css">
 </head>
 <body>
 
   <header>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container d-flex header-container justify-content-center">
-        <!-- First Row -->
-        <div class="row w-100 flex-column flex-lg-row">
-          <!-- First Container (Logo and Menu Button) -->
-          <div class="col-lg-3 col-xl-2 d-flex justify-content-center align-items-center">
-            <!-- Logo -->
-            <a href="/" class="navbar-brand logo-img d-flex justify-content-center ms-lg-2">
-              <img src="/images/video_clip_logo.png" alt="logo" class="mx-auto">
-            </a>
 
-            <!-- Menu Button with Dropdown -->
-            <span class="dropdown">
-              <button class="btn dropdown-toggle" type="button" id="menuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                Menu
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="menuButton">
-                <li><a class="dropdown-item" href="/home">Home</a></li>
-                <li><a class="dropdown-item" href="/about">About Us</a></li>
-                <li><a class="dropdown-item" href="/services">Services</a></li>
-                <li><a class="dropdown-item" href="/contact">Contact</a></li>
-                <li><a class="dropdown-item" href="/login">Σύνδεση</a></li>
+    <div id="header">
+
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container d-flex header-container justify-content-center">
+          <!-- First Row -->
+          <div class="row w-100 flex-column flex-lg-row">
+            <!-- First Container (Logo and Menu Button) -->
+            <div class="col-lg-3 col-xl-2 d-flex justify-content-center align-items-center">
+              <!-- Logo -->
+              <a href="/" class="navbar-brand logo-img d-flex justify-content-center ms-lg-2">
+                <img src="/images/video_clip_logo.png" alt="logo" class="mx-auto">
+              </a>
+
+              <!-- Menu Button with Dropdown -->
+              <span class="dropdown">
+                <button class="btn dropdown-toggle" type="button" id="menuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                  Menu
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="menuButton">
+                  <li><a class="dropdown-item" href="/home">Αρχική</a></li>
+                  <li>
+                  <li><a class="dropdown-item"
+                         th:if="${#authentication != null and #authentication.authenticated and (#authorization.expression('hasRole(''ROLE_ADMIN'')') or #authorization.expression('hasRole(''ROLE_UPLOADER'')'))}"
+                         href="/uploadVideoClip">Upload Video Clip</a>
+                  </li>
+                  <li><a class="dropdown-item"
+                         id="logout-button"
+                         th:if="${#authentication != null and #authentication.authenticated}"
+                         th:text="'Αποσύνδεση'"
+                         @click="logoutUser"></a>
+                  </li>
+                </ul>
+              </span>
+            </div>
+
+
+            <!-- Second Container (Search Bar and Login Button) -->
+            <div class="col-lg-9 col-xl-10 d-flex flex-column flex-lg-row align-items-center justify-content-lg-end">
+              <!-- Search Bar -->
+              <form class="d-flex w-100 w-sm-75 w-md-50 mx-3 me-lg-5" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-1 mx-1" type="submit">search</button>
+              </form>
+
+              <!-- Σύνδεση link -->
+              <ul class="navbar-nav mb-2 mb-lg-0 me-3 mt-3 mt-lg-0 mt-xl-0">
+                <li class="nav-item">
+                  <!-- Check if user is authenticated -->
+                  <div class="single-line"
+                       th:if="${#authentication != null and #authentication.authenticated and #authorization.expression('hasRole(''ROLE_VISITOR'')')}">
+                    Επισκέπτης: <span class="fw-bold" th:text="${#authentication.name}"></span>
+                  </div>
+                  <div class="single-line"
+                       th:if="${#authentication != null and #authentication.authenticated and #authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                    Διαχειριστής: <span class="fw-bold" th:text="${#authentication.name}"></span>
+                  </div>
+                  <div class="single-line"
+                       th:if="${#authentication != null and #authentication.authenticated and #authorization.expression('hasRole(''ROLE_UPLOADER'')')}">
+                    Uploader: <span class="fw-bold" th:text="${#authentication.name}"></span>
+                  </div>
+                  <div class="single-line"
+                       th:if="${#authentication != null and #authentication.authenticated and #authorization.expression('hasRole(''ROLE_RATER'')')}">
+                    Κριτής: <span class="fw-bold" th:text="${#authentication.name}"></span>
+                  </div>
+
+
+
+                  <!-- Show login button if user is not authenticated -->
+                  <button
+                          class="login-btn"
+                          id="login-profile-button"
+                          th:if="${#authentication == null or !#authentication.authenticated}"
+                          th:text="'Σύνδεση'"
+                          @click="profileRedirect">
+                  </button>
+                </li>
               </ul>
-            </span>
-          </div>
 
-
-          <!-- Second Container (Search Bar and Login Button) -->
-          <div class="col-lg-9 col-xl-10 d-flex flex-column flex-lg-row align-items-center justify-content-lg-end">
-            <!-- Search Bar -->
-            <form class="d-flex w-100 w-sm-75 w-md-50 mx-3 me-lg-5" role="search">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success my-1 mx-1" type="submit">Search</button>
-            </form>
-
-            <!-- Σύνδεση link -->
-            <ul class="navbar-nav mb-2 mb-lg-0">
-              <li class="nav-item">
-                <button class="login-btn me-3" id="login-profile-button" style="visibility:hidden">...</button>
-              </li>
-            </ul>
-<!--            <a href="/login" id="header-login-button" class="navbar-nav nav-link me-3">Σύνδεση</a>-->
-          </div>
-        </div>
-      </div>
-    </nav>
-
-    <!-- Popup Form -->
-    <div class="blur-bg-overlay"></div>
-
-    <div class="form-popup">
-
-      <form th:action="@{/login}" method="post" id="loginForm">
-        <span class="close-btn material-symbols-rounded">close</span>
-        <div class="form-box login">
-          <div class="form-details">
-            <h2 class="text-white">Welcome Back!</h2>
-          </div>
-          <div class="form-content">
-            <h2>Log In</h2>
-
-            <p id="failed-login-message"></p>
-            <div class="input-field">
-              <input type="text" th:name="username" class="form-control" required="required" id="login-username" />
-              <label>Username</label>
-            </div>
-            <div class="input-field">
-              <input type="password" th:name="password" class="form-control" required="required" id="login-password" />
-              <label>Password</label>
-            </div>
-            <button type="submit" class="w-100 mt-1">Log In</button>
-            <div class="spinner-border text-darkmagenta mt-3" id="loading-spinner-login" style="visibility: hidden;"></div>
-
-            <div class="bottom-link">
-              Don't have an account?
-              <a href="#" id="signup-link">Sign Up</a>
+              <!--            <a href="/login" id="header-login-button" class="navbar-nav nav-link me-3">Σύνδεση</a>-->
             </div>
           </div>
         </div>
-      </form>
+      </nav>
 
-      <form th:action="@{/register}" method="post" id="signUpForm">
-        <div class="form-horizontal login-form">
-          <div class="form-box signup">
-            <div class="form-details">
-              <h2 class="text-white">Create Account</h2>
+      <!-- Popup Form -->
+      <div v-if="showPopup" id="blur-bg-overlay" @click="togglePopup" class="blur-bg-overlay" v-cloak></div>
+
+      <div v-if="showPopup" class="form-popup" v-cloak>
+
+        <form v-if="!showSignUp" @submit.prevent="loginUser">
+          <span class="close-btn material-symbols-rounded" @click="togglePopup">Κλείσιμο</span>
+          <div class="form-box login">
+            <div class="form-details" style="height: 25rem">
+              <h2 class="text-white">Καλωσήρθατε!</h2>
             </div>
             <div class="form-content">
-              <h2>Sign up</h2>
+              <h2>Σύνδεση</h2>
 
-              <p id="failed-sign-up-message"></p>
-
+              <p v-if="loginError">{{ loginError }}</p>
               <div class="input-field">
-                <input type="text" th:name="username" class="form-control" required="required" id="register-username" />
-                <label>Enter your username</label>
+                <input type="text" v-model="loginForm.username" class="form-control" required="required" />
+                <label>Όνομα</label>
               </div>
-
               <div class="input-field">
-                <input type="password" th:name="password" class="form-control" required="required" id="register-password" />
-                <label>Create password</label>
+                <input type="password" v-model="loginForm.password" class="form-control" required="required" />
+                <label>Κωδικός</label>
               </div>
-
-              <div class="policy-text">
-                <input type="checkbox" id="policy" />
-                <label for="policy">
-                  I agree to <a href="#">Terms & Conditions</a>
-                </label>
+              <button type="submit" class="w-100 mt-1" :disabled="loading.login">Σύνδεση</button>
+              <div class="d-flex justify-content-center">
+                <div v-if="loading.login" class="spinner-border text-darkmagenta mt-3"></div>
               </div>
-              <button type="submit" style="width: 100%;">Sign Up</button>
-              <div class="spinner-border text-darkmagenta mt-3" id="loading-spinner-sign-up" style="visibility: hidden;"></div>
 
               <div class="bottom-link">
-                Already have an account?
-                <a href="#" id="login-link">Login</a>
+                Δεν έχετε λογαριασμό?
+                <a href="#" @click.prevent="toggleSignUp">Εγγραφή</a>
               </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+
+        <form v-else @submit.prevent="signUpUser">
+          <span class="close-btn material-symbols-rounded" @click="togglePopup">Κλείσιμο</span>
+          <div class="form-horizontal login-form">
+            <div class="form-box signup">
+              <div class="form-details" style="height: 31rem">
+                <h2 class="text-white">Δημιουργία Λογαριασμού</h2>
+              </div>
+              <div class="form-content">
+                <h2>Εγγραφή</h2>
+
+                <p v-if="signUpError">{{ signUpError }}</p>
+
+                <div class="input-field">
+                  <input type="text" v-model="signUpForm.username" class="form-control" required="required" />
+                  <label>Όνομα</label>
+                </div>
+
+                <div class="input-field">
+                  <input type="password" v-model="signUpForm.password" class="form-control" required="required" />
+                  <label>Κωδικός</label>
+                </div>
+
+                <div>
+                  <div class="d-flex justify-content-center mt-3">
+                    <label class="fs-4">Επιλέξτε Ρόλο:</label>
+                  </div>
+                  <div class="mt-1">
+                    <input type="radio" id="visitor" value="ROLE_VISITOR" v-model="signUpForm.role">
+                    <label for="visitor" class="fs-6">Επισκέπτης</label>
+                  </div>
+                  <div class="mt-1">
+                    <input type="radio" id="rater" value="ROLE_RATER" v-model="signUpForm.role">
+                    <label for="rater" class="fs-6">Κριτής</label>
+                  </div>
+                  <div class="mt-1">
+                    <input type="radio" id="uploader" value="ROLE_UPLOADER" v-model="signUpForm.role">
+                    <label for="uploader" class="fs-6">Uploader</label>
+                  </div>
+                </div>
+
+                <div class="policy-text mt-4">
+                  <input type="checkbox" id="policy" />
+                  <label for="policy">
+                    Συμφωνώ με τους <a href="#">Όρους χρήσης</a>
+                  </label>
+                </div>
+                <button type="submit" class="w-100 mt-1" :disabled="loading.signUp">Εγγραφή</button>
+
+                <div class="d-flex justify-content-center">
+                  <div v-if="loading.signUp" class="spinner-border text-darkmagenta mt-3"></div>
+                </div>
+
+                <div class="bottom-link">
+                  Έχετε ήδη λογαριασμό?
+                  <a href="#" @click.prevent="toggleSignUp">Σύνδεση</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+
+      <script src="/webjars/jquery/3.6.4/jquery.min.js"></script>
+      <script src="/webjars/popper.js/2.11.7/umd/popper.min.js"></script>
+      <script src="/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+      <script src="/webjars/vue/3.2.47/dist/vue.global.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+      <script src="/js/header.js"></script>
+
+
     </div>
-
-    <script src="/webjars/jquery/3.6.4/jquery.min.js"></script>
-    <script src="/webjars/popper.js/2.11.7/umd/popper.min.js"></script>
-    <script src="/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
-    <script src="/js/header.js"></script>
-
   </header>
 
 </body>

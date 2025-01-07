@@ -7,18 +7,170 @@
 
     <link rel="stylesheet" href="/css/style.css">
 
-    <div th:replace="~{shared/header :: head}"></div>
+    <style>
+        /* Custom styles for the layout */
+        .custom-carousel {
+            height: 400px; /* Default height */
+            overflow: hidden;
+        }
 
+        .custom-carousel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures the image covers the container */
+        }
+
+        @media (max-width: 768px) {
+            .custom-carousel {
+                height: 300px; /* Adjust height for smaller screens */
+            }
+        }
+
+        @media (max-width: 576px) {
+            .custom-carousel {
+                height: 200px; /* Adjust height for extra small screens */
+            }
+        }
+
+        .details-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .upcoming-container {
+            margin-top: 40px;
+        }
+
+        .upcoming-header {
+            text-align: left;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .upcoming-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .upcoming-images img {
+            width: 100%;
+            aspect-ratio: 16 / 9; /* Maintain YouTube-like aspect ratio */
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .upcoming-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            .upcoming-images {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .upcoming-images {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <div th:replace="~{shared/header :: head}"></div>
 </head>
 <body>
-
     <div th:replace="~{shared/header :: header}"></div>
 
-    <div class="container text-center">
-        <h1>Welcome to Video Clip Ratings</h1>
-        <p>Rate your favorite video clips easily and quickly.</p>
-        <a th:href="@{/videos}" class="btn btn-primary">Browse Videos</a>
+    <script th:inline="javascript">
+        const videoClips = /*[[${videoClips}]]*/ [];
+    </script>
+
+    <div id="index" class="container mt-4">
+        <div class="row">
+            <!-- Carousel Section -->
+            <div class="col-lg-8">
+                <div id="videoClipCarousel" class="carousel slide custom-carousel" data-bs-ride="carousel" v-if="hasVideos">
+                    <div class="carousel-inner">
+                        <div v-for="(videoClip, index) in videoClips" :key="videoClip.uuid" :class="['carousel-item', { active: index === currentVideoIndex }]">
+                            <img :src="videoClip.videoClipImageUrl" class="d-block w-100" :alt="videoClip.movieTitle">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5>{{ videoClip.movieTitle }}</h5>
+                                <p>Enjoy the latest video clips and their details.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#videoClipCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#videoClipCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <hr class="d-lg-none mt-2 mx-1" v-if="hasVideos">
+                <div v-else>
+                    <p class="text-center">Δεν υπάρχουν βίντεο κλιπ αυτή τη στιγμή.</p>
+                </div>
+            </div>
+
+            <!-- Details Section -->
+            <div class="col-lg-4 details-section" v-if="hasVideos && currentVideo">
+                <div class="mb-3">
+                    <img :src="currentVideo.imageUrl" style="width: 95px; height: 130px; object-fit: cover;" :alt="currentVideo.movieTitle">
+                    <h3 class="d-inline ms-2">{{ currentVideo.movieTitle }}</h3>
+                </div>
+                <p>{{ currentVideo.description }}</p>
+                <ul>
+                    <li>Year: {{ currentVideo.movieTitle }}</li>
+                </ul>
+
+                <button class="btn btn-primary" @click="goToVideo(currentVideo.movieTitle)">Watch Now</button>
+            </div>
+            <div v-else>
+                <p class="text-center">Δεν υπάρχουν διαθέσιμα βίντεο κλιπ αυτή τη στιγμή.</p>
+            </div>
+
+        </div>
+
     </div>
+
+    <!-- Upcoming Section -->
+    <div class="container upcoming-container">
+        <div class="upcoming-header">Upcoming</div>
+        <div class="upcoming-images">
+            <div th:if="${videoClips != null && videoClips.size() > 0}" th:each="videoClip : ${videoClips}">
+                <img th:src="${videoClip.videoClipImageUrl}" th:alt="${videoClip.movieTitle}">
+                <div class="d-flex mt-3">
+                    <img th:src="${videoClip.imageUrl}" alt="Small Image" class="me-2" style="width: 95px; height: 130px; object-fit: cover;">
+                    <p th:text="${videoClip.description}">Explore the latest trends in video clips.</p>
+                </div>
+            </div>
+            <div th:if="${videoClips.size() == 0}">
+                <p class="text-center">Δεν υπάρχουν βίντεο κλιπ αυτή τη στιγμή.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container body-content">
+        <hr />
+        <footer>
+            <p>&copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span></p>
+        </footer>
+    </div>
+
+
+
+
+    <script src="/js/index.js"></script>
 
 </body>
 </html>

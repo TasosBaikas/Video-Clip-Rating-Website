@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Clip Ratings</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+
+    <div th:replace="~{shared/header :: head}"></div>
+</head>
+<body>
+    <div th:replace="~{shared/header :: header}"></div>
+
+
+    <div id="uploadVideoClip" class="container mt-5 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="card p-4 shadow-lg" style="max-width: 600px; width: 100%;">
+            <!-- Simple Intro Text -->
+            <h2 class="text-center mb-4">Προσθήκη Video Clip</h2>
+            <p class="text-center">Συμπληρώστε τη φόρμα για να ανεβάσετε ένα νέο video clip.</p>
+
+            <!-- Form -->
+            <form method="post" action="/uploadVideoClip" enctype="multipart/form-data">
+                <!-- YouTube URL -->
+                <div class="mb-3">
+                    <label for="youtubeUrl" class="form-label">YouTube URL</label>
+                    <small class="form-text text-muted">Εισάγετε τη διεύθυνση URL του video clip στο YouTube.</small>
+                    <input type="url" class="form-control" id="youtubeUrl" name="youtubeUrl" placeholder="π.χ. https://youtube.com/..." required>
+                </div>
+
+                <!-- Image URL -->
+                <div class="mb-3">
+                    <label for="imageUrl" class="form-label">Εικόνα Εξωφύλλου (Image URL)</label>
+                    <small class="form-text text-muted">Εισάγετε τη διεύθυνση URL της εικόνας εξωφύλλου.</small>
+                    <input type="url" class="form-control" id="imageUrl" name="imageUrl" placeholder="π.χ. https://example.com/image.jpg" required>
+                </div>
+
+                <!-- Movie Title -->
+                <div class="mb-3">
+                    <label for="movieTitle" class="form-label">Τίτλος Ταινίας</label>
+                    <small class="form-text text-muted">Ο τίτλος της ταινίας πρέπει να είναι μοναδικός.</small>
+                    <input type="text" class="form-control" id="movieTitle" name="movieTitle" placeholder="π.χ. Ο Τίτλος Της Ταινίας" required>
+                </div>
+
+                <!-- Video Clip Thumbnail -->
+                <div class="mb-3">
+                    <label for="videoClipImageUrl" class="form-label">Μικρογραφία Video Clip (Thumbnail URL)</label>
+                    <small class="form-text text-muted">Εισάγετε τη διεύθυνση URL της μικρογραφίας του video clip.</small>
+                    <input type="url" class="form-control" id="videoClipImageUrl" name="videoClipImageUrl" placeholder="π.χ. https://example.com/thumbnail.jpg" required>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-3">
+                    <label for="description" class="form-label">Περιγραφή</label>
+                    <small class="form-text text-muted">Προσθέστε μια σύντομη περιγραφή για το video clip.</small>
+                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Γράψτε μια σύντομη περιγραφή..." required></textarea>
+                </div>
+
+                <!-- Duration in Seconds -->
+                <div class="mb-3">
+                    <label for="durationInSeconds" class="form-label">Διάρκεια (σε Δευτερόλεπτα)</label>
+                    <small class="form-text text-muted">Πόσο διαρκεί το video clip σε δευτερόλεπτα;</small>
+                    <input type="number" class="form-control" id="durationInSeconds" name="durationInSeconds" placeholder="π.χ. 120" required>
+                </div>
+
+                <!-- Movie Duration in Minutes -->
+                <div class="mb-3">
+                    <label for="movieDurationInMinutes" class="form-label">Διάρκεια Ταινίας (σε Λεπτά)</label>
+                    <small class="form-text text-muted">Συνολική διάρκεια της ταινίας σε λεπτά.</small>
+                    <input type="number" class="form-control" id="movieDurationInMinutes" name="movieDurationInMinutes" placeholder="π.χ. 120" required>
+                </div>
+
+                <!-- Release Time in UTC -->
+                <div class="mb-3">
+                    <label for="releaseTimeInUTC" class="form-label">Ημερομηνία Κυκλοφορίας (UTC)</label>
+                    <small class="form-text text-muted">Ορίστε την ημερομηνία και ώρα κυκλοφορίας σε μορφή UTC.</small>
+                    <input type="datetime-local" class="form-control" id="releaseTimeInUTC" name="releaseTimeInUTC" required>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary w-100">Υποβολή</button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+    <div class="container body-content">
+        <hr />
+        <footer>
+            <p>&copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span></p>
+        </footer>
+    </div>
+
+
+
+
+    <script src="/js/uploadVideoClip.js"></script>
+
+</body>
+</html>

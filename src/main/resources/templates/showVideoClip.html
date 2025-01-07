@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Clip Ratings</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+
+    <div th:replace="~{shared/header :: head}"></div>
+</head>
+<body>
+
+    <div th:replace="~{shared/header :: header}"></div>
+
+    <script th:inline="javascript">
+        const videoClipWithComments = /*[[${videoClipWithComments}]]*/ [];
+        const user = /*[[${user}]]*/ [];
+        const hasLiked = /*[[${hasLiked}]]*/ false;
+        const hasDisliked = /*[[${hasDisliked}]]*/ false;
+    </script>
+
+    <div id="showVideoClip">
+
+        <div class="container mt-4">
+            <div class="row" v-if="videoClipWithComments">
+                <!-- Video Player Section -->
+                <div class="col-lg-8">
+                    <div>
+                        <iframe
+                                width="100%" height="415"
+                                :src="videoClipWithComments.youtubeUrl"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                        </iframe>
+
+
+                        <div class="d-flex justify-content-center">
+
+                            <button @click="likeVideo" aria-pressed="false"
+                                    :class="{'btn-success': hasLiked, 'btn-default': !hasLiked}"
+                                    class="ipc-btn me-2" title="Select to like"
+                                    tabindex="0" aria-disabled="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--thumb-up ipc-btn__icon ipc-btn__icon--pre" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M13.12 2.06c.58-.59 1.52-.59 2.11-.01.36.36.51.87.41 1.37L14.69 8h5.65c2.15 0 3.6 2.2 2.76 4.18l-3.26 7.61C19.52 20.52 18.8 21 18 21H9c-1.1 0-2-.9-2-2V9.01c0-.53.21-1.04.58-1.41l5.54-5.54zM9.293 8.707A1 1 0 0 0 9 9.414V18a1 1 0 0 0 1 1h7.332a1 1 0 0 0 .924-.617c1.663-4.014 2.527-6.142 2.594-6.383.07-.253.12-.587.15-1v-.002A1 1 0 0 0 20 10h-8l1.34-5.34-4.047 4.047zM3 21c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2s-2 .9-2 2v8c0 1.1.9 2 2 2z"></path>
+                                </svg>
+
+                                <span class="ms-1">
+                                    <span class="" aria-hidden="true">{{videoClipWithComments.likeCount}}</span>
+                                </span>
+                            </button>
+
+                            <button @click="dislikeVideo" aria-pressed="false"
+                                    :class="{'btn-danger': hasDisliked, 'btn-default': !hasDisliked}"
+                                    class="ipc-btn ms-2" title="Select to dislike"
+                                    tabindex="0" aria-label="Dislike"
+                                    aria-disabled="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--thumb-down ipc-btn__icon ipc-btn__icon--pre ipc-btn__icon--disable-margin" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M16.41 16.4l-5.53 5.54c-.58.59-1.52.59-2.11.01-.36-.36-.51-.87-.41-1.37L9.31 16H3.66c-2.15 0-3.6-2.2-2.75-4.18l3.26-7.61A1.99 1.99 0 0 1 6 3h8.99c1.1 0 2 .9 2 2v9.99c0 .53-.21 1.04-.58 1.41zm-1.703-1.107a1 1 0 0 0 .293-.707V6a1 1 0 0 0-1-1H6.66a1 1 0 0 0-.92.607c-1.667 3.902-2.53 5.981-2.586 6.236-.06.268-.11.606-.154 1.013V13a1 1 0 0 0 1 1h8l-1.077 4.293c-.153.527-.19.814-.11.86.08.046.281-.144.605-.571l3.29-3.29zM21 3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2s2-.9 2-2V5c0-1.1-.9-2-2-2z"></path>
+                                </svg>
+
+                                <span class="ms-1">
+                                    <span class="" aria-hidden="true">{{videoClipWithComments.dislikeCount}}</span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <hr class="d-lg-none my-2 mx-1">
+
+                </div>
+
+                <!-- Details Section -->
+                <div class="col-lg-4 details-section">
+                    <div class="mb-3">
+                        <img :src="videoClipWithComments.imageUrl" style="width: 95px; height: 130px; object-fit: cover;" :alt="videoClipWithComments.movieTitle">
+                        <h3 class="d-inline ms-2">{{ videoClipWithComments.movieTitle }}</h3>
+                    </div>
+                    <p>{{ videoClipWithComments.description }}</p>
+                    <ul>
+                        <li>Duration: {{ videoClipWithComments.durationInSeconds }} seconds</li>
+                        <li>Release Date: {{ formatDate(videoClipWithComments.releaseTimeInUTC) }}</li>
+                    </ul>
+                </div>
+            </div>
+            <div v-else>
+                <p class="text-center">Δεν υπάρχουν διαθέσιμα βίντεο αυτή τη στιγμή.</p>
+            </div>
+
+        </div>
+
+        <div class="container mt-2">
+            <h5>Comments:</h5>
+            <ul>
+<!--                <li v-for="comment in videoClipWithComments.comments" :key="comment.uuid">-->
+<!--                    <strong>{{ videoClipWithComments.comment.user.username }}</strong>: {{ videoClipWithComments.comment.content }}-->
+<!--                </li>-->
+            </ul>
+        </div>
+
+        <div class="container body-content">
+            <hr />
+            <footer>
+                <p>&copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span></p>
+            </footer>
+        </div>
+
+
+    </div>
+
+
+    <script src="/js/showVideoClip.js"></script>
+
+</body>
+</html>
