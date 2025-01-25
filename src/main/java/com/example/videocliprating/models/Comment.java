@@ -1,5 +1,6 @@
 package com.example.videocliprating.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,8 +20,9 @@ public class Comment {
     @Id
     private String uuid;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "video_clip_uuid", nullable = false)
+    @JsonBackReference
     private VideoClip videoClip;
 
     @ManyToOne

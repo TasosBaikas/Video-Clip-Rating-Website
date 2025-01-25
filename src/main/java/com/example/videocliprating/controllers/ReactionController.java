@@ -1,12 +1,9 @@
 package com.example.videocliprating.controllers;
 
-import com.example.videocliprating.models.dto.VideoClipDTO;
 import com.example.videocliprating.models.dto.VideoClipWithCommentsDTO;
 import com.example.videocliprating.models.requests.ReactionRequest;
-import com.example.videocliprating.services.HomeService;
 import com.example.videocliprating.services.ReactionService;
 import org.apache.tomcat.websocket.AuthenticationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;

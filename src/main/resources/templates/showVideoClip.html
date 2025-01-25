@@ -29,7 +29,7 @@
                 <div class="col-lg-8">
                     <div>
                         <iframe
-                                width="100%" height="415"
+                                width="100%" height="520"
                                 :src="videoClipWithComments.youtubeUrl"
                                 frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -75,13 +75,14 @@
                 <!-- Details Section -->
                 <div class="col-lg-4 details-section">
                     <div class="mb-3">
-                        <img :src="videoClipWithComments.imageUrl" style="width: 95px; height: 130px; object-fit: cover;" :alt="videoClipWithComments.movieTitle">
-                        <h3 class="d-inline ms-2">{{ videoClipWithComments.movieTitle }}</h3>
+                        <img :src="videoClipWithComments.imageUrl" style="width: 105px; height: 155px; object-fit: cover;" :alt="videoClipWithComments.movieTitle">
+                        <h3 class="d-inline ms-2"><strong>{{ videoClipWithComments.movieTitle }}</strong></h3>
                     </div>
                     <p>{{ videoClipWithComments.description }}</p>
                     <ul>
-                        <li>Duration: {{ videoClipWithComments.durationInSeconds }} seconds</li>
-                        <li>Release Date: {{ formatDate(videoClipWithComments.releaseTimeInUTC) }}</li>
+                        <li>Διάρκεια Video clip: <strong>{{ videoClipWithComments.durationInSeconds }} δευτερόλεπτα</strong></li>
+                        <li>Διάρκεια Ταινίας: <strong>{{ videoClipWithComments.movieDurationInMinutes }} λεπτά</strong></li>
+                        <li>Release Date: <strong>{{ formatDate(videoClipWithComments.releaseTimeInUTC) }}</strong></li>
                     </ul>
                 </div>
             </div>
@@ -92,13 +93,31 @@
         </div>
 
         <div class="container mt-2">
-            <h5>Comments:</h5>
-            <ul>
-<!--                <li v-for="comment in videoClipWithComments.comments" :key="comment.uuid">-->
-<!--                    <strong>{{ videoClipWithComments.comment.user.username }}</strong>: {{ videoClipWithComments.comment.content }}-->
-<!--                </li>-->
+            <h5>{{ videoClipWithComments.comments.length }} Σχόλια</h5>
+
+            <div class="input-group">
+                <input type="text" v-model="newComment" class="form-control" placeholder="Γράψτε ένα σχόλιο...">
+                <button class="btn btn-primary" @click="submitComment" :disabled="!newComment.trim()">Αποστολή</button>
+            </div>
+
+
+            <ul class="list-group mt-4">
+                <li v-for="comment in videoClipWithComments.comments" :key="comment.uuid" class="list-group-item mt-2">
+                    <div class="d-flex align-items-start ms-2">
+                        <div class="flex-grow-1">
+                            <strong>@{{ comment.user.username }}</strong>
+                            <p class="mb-1 text-break">{{ comment.content }}</p>
+                            <small class="text-muted">{{ formatCommentDate(comment.createdTime) }}</small>
+                        </div>
+                    </div>
+                </li>
+
+                <li v-if="videoClipWithComments.comments.length === 0" class="list-group-item text-center">
+                    Δεν υπάρχουν σχόλια.
+                </li>
             </ul>
         </div>
+
 
         <div class="container body-content">
             <hr />

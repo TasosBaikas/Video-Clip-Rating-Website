@@ -1,11 +1,11 @@
-package com.example.videocliprating.configurations;
+package com.example.videocliprating.unittest.configurations;
 
 
+import com.example.videocliprating.configurations.CustomUserDetailsService;
 import com.example.videocliprating.models.User;
 import com.example.videocliprating.models.constants.Role;
 import com.example.videocliprating.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 

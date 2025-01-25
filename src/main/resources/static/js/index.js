@@ -23,6 +23,15 @@ const app = Vue.createApp({
             const encodedTitle = encodeURIComponent(movieTitle); // Handle special characters
             window.location.href = `/showVideoClip/${encodedTitle}`;
         },
+        formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('el-GR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            });
+        },
     },
     mounted() {
         const carouselElement = document.getElementById('videoClipCarousel');

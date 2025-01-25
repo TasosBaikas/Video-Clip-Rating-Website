@@ -125,7 +125,13 @@ const headerApp = Vue.createApp({
     },
     mounted() {
         this.initializeUser();
+
+        window.addEventListener('trigger-login', this.togglePopup.bind(this));
     },
+    beforeUnmount() {
+        window.removeEventListener('trigger-login', this.togglePopup);
+    },
+
 });
 
 headerApp.mount('#header');

@@ -10,7 +10,6 @@
     <style>
         /* Custom styles for the layout */
         .custom-carousel {
-            height: 400px; /* Default height */
             overflow: hidden;
         }
 
@@ -35,7 +34,6 @@
         .details-section {
             display: flex;
             flex-direction: column;
-            justify-content: center;
             padding: 20px;
         }
 
@@ -92,73 +90,82 @@
         const videoClips = /*[[${videoClips}]]*/ [];
     </script>
 
-    <div id="index" class="container mt-4">
-        <div class="row">
-            <!-- Carousel Section -->
-            <div class="col-lg-8">
-                <div id="videoClipCarousel" class="carousel slide custom-carousel" data-bs-ride="carousel" v-if="hasVideos">
-                    <div class="carousel-inner">
-                        <div v-for="(videoClip, index) in videoClips" :key="videoClip.uuid" :class="['carousel-item', { active: index === currentVideoIndex }]">
-                            <img :src="videoClip.videoClipImageUrl" class="d-block w-100" :alt="videoClip.movieTitle">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h5>{{ videoClip.movieTitle }}</h5>
-                                <p>Enjoy the latest video clips and their details.</p>
+    <div id="index">
+
+        <div class="container mt-4">
+            <div class="row">
+                <!-- Carousel Section -->
+                <div class="col-lg-8">
+                    <div id="videoClipCarousel" class="carousel slide custom-carousel" data-bs-ride="carousel" v-if="hasVideos">
+                        <div class="carousel-inner">
+                            <div v-for="(videoClip, index) in videoClips" :key="videoClip.uuid" :class="['carousel-item', { active: index === currentVideoIndex }]">
+
+                                <img :src="videoClip.videoClipImageUrl"
+                                     class="d-block w-100"
+                                     style="object-fit: fill; height: 520px;"
+                                     :alt="videoClip.movieTitle">
                             </div>
                         </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#videoClipCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#videoClipCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#videoClipCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#videoClipCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
+                    <hr class="d-lg-none mt-2 mx-1" v-if="hasVideos">
+                    <div v-else>
+                        <p class="text-center">Δεν υπάρχουν βίντεο κλιπ αυτή τη στιγμή.</p>
+                    </div>
                 </div>
-                <hr class="d-lg-none mt-2 mx-1" v-if="hasVideos">
+
+                <!-- Details Section -->
+                <div class="col-lg-4 details-section" v-if="hasVideos && currentVideo">
+                    <div class="mb-3">
+                        <img :src="currentVideo.imageUrl" style="width: 110px; height: 155px; object-fit: cover;" :alt="currentVideo.movieTitle">
+                        <h3 class="d-inline ms-2"><strong>{{ currentVideo.movieTitle }}</strong></h3>
+                    </div>
+                    <p>{{ currentVideo.description }}</p>
+                    <ul>
+                        <li>Διάρκεια Video clip: <strong>{{ currentVideo.durationInSeconds }} δευτερόλεπτα</strong></li>
+                        <li>Διάρκεια Ταινίας: <strong>{{ currentVideo.movieDurationInMinutes }} λεπτά</strong></li>
+                        <li>Release Date: <strong>{{ formatDate(currentVideo.releaseTimeInUTC) }}</strong></li>
+                    </ul>
+
+                    <button class="btn btn-primary" @click="goToVideo(currentVideo.movieTitle)">Watch Now</button>
+                </div>
                 <div v-else>
+                    <p class="text-center">Δεν υπάρχουν διαθέσιμα βίντεο κλιπ αυτή τη στιγμή.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Upcoming Section -->
+        <div class="container upcoming-container">
+            <div class="upcoming-header">Upcoming Movies</div>
+            <div class="upcoming-images">
+                <div v-if="videoClips && videoClips.length > 0 && videoClips.length < 3" v-for="videoClip in videoClips" :key="videoClip.uuid">
+                    <img :src="videoClip.videoClipImageUrl" :alt="videoClip.movieTitle">
+                    <div class="d-flex mt-3">
+                        <img :src="videoClip.imageUrl" alt="Small Image" class="me-2" style="width: 95px; height: 130px; object-fit: cover;">
+                        <ul>
+                            <li>Διάρκεια Video clip: <strong>{{ videoClip.durationInSeconds }} δευτερόλεπτα</strong></li>
+                            <li>Release Date: <strong>{{ formatDate(videoClip.releaseTimeInUTC) }}</strong></li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary mt-2" @click="goToVideo(videoClip.movieTitle)">Watch Now</button>
+                </div>
+                <div v-if="!videoClips || videoClips.length == 0">
                     <p class="text-center">Δεν υπάρχουν βίντεο κλιπ αυτή τη στιγμή.</p>
                 </div>
             </div>
-
-            <!-- Details Section -->
-            <div class="col-lg-4 details-section" v-if="hasVideos && currentVideo">
-                <div class="mb-3">
-                    <img :src="currentVideo.imageUrl" style="width: 95px; height: 130px; object-fit: cover;" :alt="currentVideo.movieTitle">
-                    <h3 class="d-inline ms-2">{{ currentVideo.movieTitle }}</h3>
-                </div>
-                <p>{{ currentVideo.description }}</p>
-                <ul>
-                    <li>Year: {{ currentVideo.movieTitle }}</li>
-                </ul>
-
-                <button class="btn btn-primary" @click="goToVideo(currentVideo.movieTitle)">Watch Now</button>
-            </div>
-            <div v-else>
-                <p class="text-center">Δεν υπάρχουν διαθέσιμα βίντεο κλιπ αυτή τη στιγμή.</p>
-            </div>
-
         </div>
 
     </div>
-
-    <!-- Upcoming Section -->
-    <div class="container upcoming-container">
-        <div class="upcoming-header">Upcoming</div>
-        <div class="upcoming-images">
-            <div th:if="${videoClips != null && videoClips.size() > 0}" th:each="videoClip : ${videoClips}">
-                <img th:src="${videoClip.videoClipImageUrl}" th:alt="${videoClip.movieTitle}">
-                <div class="d-flex mt-3">
-                    <img th:src="${videoClip.imageUrl}" alt="Small Image" class="me-2" style="width: 95px; height: 130px; object-fit: cover;">
-                    <p th:text="${videoClip.description}">Explore the latest trends in video clips.</p>
-                </div>
-            </div>
-            <div th:if="${videoClips.size() == 0}">
-                <p class="text-center">Δεν υπάρχουν βίντεο κλιπ αυτή τη στιγμή.</p>
-            </div>
-        </div>
-    </div>
-
 
     <div class="container body-content">
         <hr />

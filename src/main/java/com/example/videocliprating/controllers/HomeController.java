@@ -2,7 +2,6 @@ package com.example.videocliprating.controllers;
 
 import com.example.videocliprating.models.dto.VideoClipDTO;
 import com.example.videocliprating.services.HomeService;
-import com.example.videocliprating.services.SignUpService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

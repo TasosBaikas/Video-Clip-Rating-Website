@@ -29,11 +29,10 @@
                     <input type="url" class="form-control" id="youtubeUrl" name="youtubeUrl" placeholder="π.χ. https://youtube.com/..." required>
                 </div>
 
-                <!-- Image URL -->
+                <!-- Image URL Upload -->
                 <div class="mb-3">
-                    <label for="imageUrl" class="form-label">Εικόνα Εξωφύλλου (Image URL)</label>
-                    <small class="form-text text-muted">Εισάγετε τη διεύθυνση URL της εικόνας εξωφύλλου.</small>
-                    <input type="url" class="form-control" id="imageUrl" name="imageUrl" placeholder="π.χ. https://example.com/image.jpg" required>
+                    <label for="imageUrl" class="form-label">Εικόνα Εξωφύλλου</label>
+                    <input type="file" class="form-control" id="imageUrl" name="image" accept="image/*" required>
                 </div>
 
                 <!-- Movie Title -->
@@ -45,9 +44,8 @@
 
                 <!-- Video Clip Thumbnail -->
                 <div class="mb-3">
-                    <label for="videoClipImageUrl" class="form-label">Μικρογραφία Video Clip (Thumbnail URL)</label>
-                    <small class="form-text text-muted">Εισάγετε τη διεύθυνση URL της μικρογραφίας του video clip.</small>
-                    <input type="url" class="form-control" id="videoClipImageUrl" name="videoClipImageUrl" placeholder="π.χ. https://example.com/thumbnail.jpg" required>
+                    <label for="videoClipImage" class="form-label">Μικρογραφία Video Clip</label>
+                    <input type="file" class="form-control" id="videoClipImage" name="videoClipImage" accept="image/*" required>
                 </div>
 
                 <!-- Description -->
@@ -73,9 +71,9 @@
 
                 <!-- Release Time in UTC -->
                 <div class="mb-3">
-                    <label for="releaseTimeInUTC" class="form-label">Ημερομηνία Κυκλοφορίας (UTC)</label>
-                    <small class="form-text text-muted">Ορίστε την ημερομηνία και ώρα κυκλοφορίας σε μορφή UTC.</small>
-                    <input type="datetime-local" class="form-control" id="releaseTimeInUTC" name="releaseTimeInUTC" required>
+                    <label for="releaseTimeInAthensTime" class="form-label">Ημερομηνία Πρεμιέρας Ταινίας</label>
+                    <small class="form-text text-muted">Ορίστε την ημερομηνία και ώρα κυκλοφορίας.</small>
+                    <input type="datetime-local" class="form-control" id="releaseTimeInAthensTime" name="releaseTimeInAthensTime" required>
                 </div>
 
                 <!-- Submit Button -->

@@ -1,5 +1,6 @@
 package com.example.videocliprating.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,7 +46,8 @@ public class VideoClip {
     @Column(nullable = false)
     private LocalDateTime releaseTimeInUTC;
 
-    @OneToMany(mappedBy = "videoClip", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "videoClip", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
     public VideoClip(String uuid, String youtubeUrl, String imageUrl, String movieTitle, String videoClipImageUrl, String description, int durationInSeconds, int movieDurationInMinutes, LocalDateTime releaseTimeInUTC) {
