@@ -73,15 +73,12 @@ public class UploadVideoClipService {
             String vAndEqual = "v=";
             int indexOfvAndEqual = youtubeUrl.indexOf(vAndEqual);
 
-            return youtubeUrl.substring(indexOfvAndEqual + vAndEqual.length());
+            return "https://www.youtube.com/embed/" + youtubeUrl.substring(indexOfvAndEqual + vAndEqual.length());
         }
 
         if (youtubeUrl.contains("youtube.com/embed/")){
-            String embedAndDash = "embed/";
 
-            int indexOfEmbedAndDash = youtubeUrl.indexOf(embedAndDash);
-
-            return youtubeUrl.substring(indexOfEmbedAndDash + embedAndDash.length());
+            return youtubeUrl;
         }
 
         throw new InvalidParameterException("Το youtube url δεν είναι σε σωστή μορφή");

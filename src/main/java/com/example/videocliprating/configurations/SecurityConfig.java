@@ -29,8 +29,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests()
-                .requestMatchers("/", "/**" ,"/login", "/signUp", "/home", "/showVideoClip/**","/css/**", "/js/**", "/images/**", "/webjars/**")
+                .requestMatchers("/", "/login", "/signUp", "/home", "/showVideoClip/**","/css/**", "/js/**", "/uploads/**","/images/**", "/webjars/**")
                 .permitAll()
+                .requestMatchers("/api/comments/newComment").hasAnyRole("RATER", "ADMIN")
+                .requestMatchers("/uploadVideoClip").hasAnyRole("ADMIN", "UPLOADER")
+                .requestMatchers("/api/reactions/like").hasAnyRole("RATER", "ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()

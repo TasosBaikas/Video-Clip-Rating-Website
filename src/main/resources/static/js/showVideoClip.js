@@ -15,6 +15,23 @@ const app = Vue.createApp({
         userLoggedIn() {
             return this.user != null;
         },
+        releaseDateSortedComments() {
+            if (!this.videoClipWithComments || !this.videoClipWithComments.comments) {
+                return [];
+            }
+
+            return [...this.videoClipWithComments.comments].sort((a, b) => {
+                if (!a.createdTime && !b.createdTime) {
+                    return 0;
+                } else if (!a.createdTime) {
+                    return 1; // Null values are considered older
+                } else if (!b.createdTime) {
+                    return -1; // Null values are considered older
+                }
+
+                return new Date(b.createdTime) - new Date(a.createdTime); // Newest first
+            });
+        },
     },
     methods: {
         likeVideo() {

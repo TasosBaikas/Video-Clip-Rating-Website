@@ -116,9 +116,6 @@
                         </button>
                     </div>
                     <hr class="d-lg-none mt-2 mx-1" v-if="hasVideos">
-                    <div v-else>
-                        <p class="text-center">Δεν υπάρχουν βίντεο κλιπ αυτή τη στιγμή.</p>
-                    </div>
                 </div>
 
                 <!-- Details Section -->
@@ -148,7 +145,7 @@
         <div class="container upcoming-container">
             <div class="upcoming-header">Upcoming Movies</div>
             <div class="upcoming-images">
-                <div v-if="videoClips && videoClips.length > 0 && videoClips.length < 3" v-for="videoClip in videoClips" :key="videoClip.uuid">
+                <div v-if="videoClips && videoClips.length > 0" v-for="videoClip in videoClips.slice(0, 3)" :key="videoClip.uuid">
                     <img :src="videoClip.videoClipImageUrl" :alt="videoClip.movieTitle">
                     <div class="d-flex mt-3">
                         <img :src="videoClip.imageUrl" alt="Small Image" class="me-2" style="width: 95px; height: 130px; object-fit: cover;">
@@ -159,7 +156,7 @@
                     </div>
                     <button class="btn btn-primary mt-2" @click="goToVideo(videoClip.movieTitle)">Watch Now</button>
                 </div>
-                <div v-if="!videoClips || videoClips.length == 0">
+                <div v-else>
                     <p class="text-center">Δεν υπάρχουν βίντεο κλιπ αυτή τη στιγμή.</p>
                 </div>
             </div>

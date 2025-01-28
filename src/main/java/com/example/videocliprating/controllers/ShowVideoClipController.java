@@ -25,6 +25,8 @@ public class ShowVideoClipController {
     public String showVideoClip(@PathVariable("movieTitle") String movieTitle, Model model, Principal principal) {
         // Fetch video clips using the movie title
         VideoClipWithCommentsDTO videoClipWithComments = service.getVideoClipWithCommentsByMovieTitle(movieTitle);
+        if (videoClipWithComments == null)
+            return "redirect:/";
 
         model.addAttribute("videoClipWithComments", videoClipWithComments);
 

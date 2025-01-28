@@ -102,7 +102,7 @@
 
 
             <ul class="list-group mt-4">
-                <li v-for="comment in videoClipWithComments.comments" :key="comment.uuid" class="list-group-item mt-2">
+                <li v-for="comment in releaseDateSortedComments" :key="comment.uuid" class="list-group-item mt-2">
                     <div class="d-flex align-items-start ms-2">
                         <div class="flex-grow-1">
                             <strong>@{{ comment.user.username }}</strong>
@@ -112,7 +112,7 @@
                     </div>
                 </li>
 
-                <li v-if="videoClipWithComments.comments.length === 0" class="list-group-item text-center">
+                <li v-if="releaseDateSortedComments.length === 0" class="list-group-item text-center">
                     Δεν υπάρχουν σχόλια.
                 </li>
             </ul>
