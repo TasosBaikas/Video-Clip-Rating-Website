@@ -1,6 +1,6 @@
 # Video Clip Rating Website
 
-A simple website to publish/watch/rate, based on your role, video clips.
+A simple website for publishing, watching, and rating video clips based on your role.
 
 ## Technologies
 
